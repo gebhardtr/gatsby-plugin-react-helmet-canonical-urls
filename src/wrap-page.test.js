@@ -238,3 +238,27 @@ it('should add a trailing slash and honor query and hash, if `forceTrailingSlash
   expect(link.length).toBe(1);
   expect(link[0].props.href).toBe('http://my-site.com/pathname/?search#hash');
 });
+
+it('should throw an error if conflicting options are specified', () => {
+  expect(() => {
+    wrap(
+      {
+        element: 'element',
+        props: {
+          location: {
+            pathname: '/pathname',
+            search: '?search',
+            hash: '#hash',
+          },
+        },
+      },
+      {
+        siteUrl: 'http://my-site.com',
+        forceTrailingSlash: true,
+        noTrailingSlash: true,
+      }
+    );
+  }).toThrowError(
+    new Error('conflicting options: noTrailingSlash and forceTrailingSlash')
+  );
+});

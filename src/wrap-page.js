@@ -22,6 +22,10 @@ const isExcluded = (excludes, element) => {
 module.exports = ({ element, props: { location } }, pluginOptions = {}) => {
   const options = Object.assign({}, defaultPluginOptions, pluginOptions);
 
+  if (options.noTrailingSlash && options.forceTrailingSlash) {
+    throw new Error('conflicting options: noTrailingSlash and forceTrailingSlash')
+  }
+
   if (options.siteUrl && !isExcluded(options.exclude, location.pathname)) {
     let pathname = location.pathname || '/';
 
