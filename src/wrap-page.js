@@ -2,6 +2,7 @@ const React = require('react');
 const { Helmet } = require('react-helmet');
 
 const defaultPluginOptions = {
+  forceTrailingSlash: false,
   noTrailingSlash: false,
   noQueryString: false,
   noHash: false,
@@ -24,8 +25,14 @@ module.exports = ({ element, props: { location } }, pluginOptions = {}) => {
   if (options.siteUrl && !isExcluded(options.exclude, location.pathname)) {
     let pathname = location.pathname || '/';
 
-    if (options.noTrailingSlash && pathname.endsWith('/'))
+    if (
+      options.noTrailingSlash &&
+      pathname.endsWith('/') &&
+      !options.forceTrailingSlash
+    )
       pathname = pathname.substring(0, pathname.length - 1);
+
+    if (options.forceTrailingSlash && !pathname.endsWith('/')) pathname += '/';
 
     let myUrl = `${options.siteUrl}${pathname}`;
 

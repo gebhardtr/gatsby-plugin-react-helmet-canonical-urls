@@ -213,3 +213,28 @@ test.each([
   const link = Helmet.renderStatic().link.toComponent();
   expect(link.length).toBe(0);
 });
+
+it('should add a trailing slash and honor query and hash, if `forceTrailingSlash` option is used', () => {
+  const element = wrap(
+    {
+      element: 'element',
+      props: {
+        location: {
+          pathname: '/pathname',
+          search: '?search',
+          hash: '#hash',
+        },
+      },
+    },
+    {
+      siteUrl: 'http://my-site.com',
+      forceTrailingSlash: true,
+    }
+  );
+
+  ReactDOMServer.renderToString(element);
+
+  const link = Helmet.renderStatic().link.toComponent();
+  expect(link.length).toBe(1);
+  expect(link[0].props.href).toBe('http://my-site.com/pathname/?search#hash');
+});
